@@ -10,6 +10,7 @@ Office.onReady((info) => {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
     document.getElementById("setup").onclick = setup;
+    document.getElementById("list-allConditionalFormats").onclick = listConditionalFormats;
   }
 });
 
@@ -81,4 +82,45 @@ function queueCommandsToCreateProfitLossTable(sheet: Excel.Worksheet) {
     ["Northwind", -858.21, 35.33, 49.01, 112.68],
   ]);
   profitLossTable.getDataBodyRange().numberFormat = [["$#,##0.00"]];
+}
+
+async function listConditionalFormats() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getItem("Sample");
+    const worksheetRange = sheet.getRange();
+    worksheetRange.conditionalFormats.load("type");
+
+    await context.sync();
+
+    let cfRangePairs: { cf: Excel.ConditionalFormat; range: Excel.Range }[] = [];
+    worksheetRange.conditionalFormats.items.forEach((item) => {
+      const cfRange = item.getRange();
+      cfRange.load("address");
+      cfRangePairs.push({
+        cf: item,
+        range: cfRange,
+      });
+    });
+
+    await context.sync();
+
+    if (cfRangePairs.length > 0) {
+      cfRangePairs.forEach((pair) => {
+        console.log("条件格式类型:", pair.cf.type);
+        console.log("应用范围:", pair.range.address);
+      });
+    } else {
+      console.log("未应用任何条件格式。");
+    }
+  });
+}
+
+/** Default helper for invoking an action and handling errors. */
+async function tryCatch(callback) {
+  try {
+    await callback();
+  } catch (error) {
+    // Note: In a production add-in, you'd want to notify the user through your add-in's UI.
+    console.error(error);
+  }
 }
