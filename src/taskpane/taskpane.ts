@@ -10,7 +10,16 @@ Office.onReady((info) => {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
     document.getElementById("setup").onclick = setup;
-    document.getElementById("list-allConditionalFormats").onclick = listConditionalFormats;
+    document.getElementById("apply-color-scale-format").onclick = applyColorScaleFormat;
+    document.getElementById("list-conditional-formats").onclick = listConditionalFormats;
+    document.getElementById("apply-preset-format").onclick = applyPresetFormat;
+    document.getElementById("apply-databar-format").onclick = applyDataBarFormat;
+    document.getElementById("apply-icon-set-format").onclick = applyIconSetFormat;
+    document.getElementById("apply-text-format").onclick = applyTextFormat;
+    document.getElementById("apply-cell-value-format").onclick = applyCellValueFormat;
+    document.getElementById("apply-top-bottom-format").onclick = applyTopBottomFormat;
+    document.getElementById("apply-custom-format").onclick = applyCustomFormat;
+    document.getElementById("clear-all-conditional-formats").onclick = clearAllConditionalFormats;
   }
 });
 
@@ -115,12 +124,138 @@ async function listConditionalFormats() {
   });
 }
 
-/** Default helper for invoking an action and handling errors. */
-async function tryCatch(callback) {
-  try {
-    await callback();
-  } catch (error) {
-    // Note: In a production add-in, you'd want to notify the user through your add-in's UI.
-    console.error(error);
-  }
+async function applyColorScaleFormat() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getItem("Sample");
+    const range = sheet.getRange("B2:M5");
+    const conditionalFormat = range.conditionalFormats.add(Excel.ConditionalFormatType.colorScale);
+    const criteria = {
+      minimum: { formula: null, type: Excel.ConditionalFormatColorCriterionType.lowestValue, color: "blue" },
+      midpoint: { formula: "50", type: Excel.ConditionalFormatColorCriterionType.percent, color: "yellow" },
+      maximum: { formula: null, type: Excel.ConditionalFormatColorCriterionType.highestValue, color: "red" },
+    };
+    conditionalFormat.colorScale.criteria = criteria;
+
+    await context.sync();
+  });
+}
+
+async function applyPresetFormat() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getItem("Sample");
+    const range = sheet.getRange("B2:M5");
+    const conditionalFormat = range.conditionalFormats.add(Excel.ConditionalFormatType.presetCriteria);
+    conditionalFormat.preset.format.font.color = "white";
+    conditionalFormat.preset.rule = { criterion: Excel.ConditionalFormatPresetCriterion.oneStdDevAboveAverage };
+
+    await context.sync();
+  });
+}
+
+async function applyDataBarFormat() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getItem("Sample");
+    const range = sheet.getRange("B8:E13");
+    const conditionalFormat = range.conditionalFormats.add(Excel.ConditionalFormatType.dataBar);
+    conditionalFormat.dataBar.barDirection = Excel.ConditionalDataBarDirection.leftToRight;
+
+    await context.sync();
+  });
+}
+
+async function applyIconSetFormat() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getItem("Sample");
+    const range = sheet.getRange("B8:E13");
+    const conditionalFormat = range.conditionalFormats.add(Excel.ConditionalFormatType.iconSet);
+    const iconSetCF = conditionalFormat.iconSet;
+    iconSetCF.style = Excel.IconSet.threeTriangles;
+
+    /*
+          The iconSetCF.criteria array is automatically prepopulated with
+          criterion elements whose properties have been given default settings.
+          You can't write to each property of a criterion directly. Instead,
+          replace the whole criteria object.
+
+          With a "three*" icon set style, such as "threeTriangles", the third
+          element in the criteria array (criteria[2]) defines the "top" icon;
+          e.g., a green triangle. The second (criteria[1]) defines the "middle"
+          icon. The first (criteria[0]) defines the "low" icon, but it
+          can often be left empty as the following object shows, because every
+          cell that does not match the other two criteria always gets the low
+          icon.            
+      */
+    iconSetCF.criteria = [
+      {} as any,
+      {
+        type: Excel.ConditionalFormatIconRuleType.number,
+        operator: Excel.ConditionalIconCriterionOperator.greaterThanOrEqual,
+        formula: "=700",
+      },
+      {
+        type: Excel.ConditionalFormatIconRuleType.number,
+        operator: Excel.ConditionalIconCriterionOperator.greaterThanOrEqual,
+        formula: "=1000",
+      },
+    ];
+
+    await context.sync();
+  });
+}
+
+async function applyTextFormat() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getItem("Sample");
+    const range = sheet.getRange("B16:D18");
+    const conditionalFormat = range.conditionalFormats.add(Excel.ConditionalFormatType.containsText);
+    conditionalFormat.textComparison.format.font.color = "red";
+    conditionalFormat.textComparison.rule = { operator: Excel.ConditionalTextOperator.contains, text: "Delayed" };
+
+    await context.sync();
+  });
+}
+
+async function applyCellValueFormat() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getItem("Sample");
+    const range = sheet.getRange("B21:E23");
+    const conditionalFormat = range.conditionalFormats.add(Excel.ConditionalFormatType.cellValue);
+    conditionalFormat.cellValue.format.font.color = "red";
+    conditionalFormat.cellValue.rule = { formula1: "=0", operator: "LessThan" };
+
+    await context.sync();
+  });
+}
+
+async function applyTopBottomFormat() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getItem("Sample");
+    const range = sheet.getRange("B21:E23");
+    const conditionalFormat = range.conditionalFormats.add(Excel.ConditionalFormatType.topBottom);
+    conditionalFormat.topBottom.format.fill.color = "green";
+    conditionalFormat.topBottom.rule = { rank: 1, type: "TopItems" };
+
+    await context.sync();
+  });
+}
+
+async function applyCustomFormat() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getItem("Sample");
+    const range = sheet.getRange("B8:E13");
+    const conditionalFormat = range.conditionalFormats.add(Excel.ConditionalFormatType.custom);
+    conditionalFormat.custom.rule.formula = '=IF(B8>INDIRECT("RC[-1]",0),TRUE)';
+    conditionalFormat.custom.format.font.color = "green";
+
+    await context.sync();
+  });
+}
+async function clearAllConditionalFormats() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getItem("Sample");
+    const range = sheet.getRange();
+    range.conditionalFormats.clearAll();
+
+    await context.sync();
+  });
 }
