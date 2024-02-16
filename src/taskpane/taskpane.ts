@@ -20,9 +20,10 @@ Office.onReady((info) => {
     document.getElementById("apply-top-bottom-format").onclick = applyTopBottomFormat;
     document.getElementById("apply-custom-format").onclick = applyCustomFormat;
     document.getElementById("clear-all-conditional-formats").onclick = clearAllConditionalFormats;
+    document.getElementById("save-all-conditional-formats").onclick = saveConditionalFormats;
   }
 });
-
+let savedConditionalFormats = [];
 async function setup() {
   await Excel.run(async (context) => {
     context.workbook.worksheets.getItemOrNullObject("Sample").delete();
@@ -257,5 +258,41 @@ async function clearAllConditionalFormats() {
     range.conditionalFormats.clearAll();
 
     await context.sync();
+  });
+}
+// 保存当前工作表所有条件格式
+async function saveConditionalFormats() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getActiveWorksheet();
+    const worksheetRange = sheet.getRange();
+    worksheetRange.conditionalFormats.load("type");
+
+    await context.sync();
+
+    savedConditionalFormats = [];
+    worksheetRange.conditionalFormats.items.forEach((item) => {
+      let savedCF = {
+        type: item.type,
+        rangeAddress: item.getRange().address,
+        criteria: [],
+        format: null,
+        rule: null,
+      };
+
+      switch (item.type) {
+        case "ContainsText":
+        case "CellValue":
+        case "TopBottom":
+        case "Custom":
+          savedCF.format = item.custom.format;
+          savedCF.rule = item.custom.rule;
+          break;
+      }
+
+      savedConditionalFormats.push(savedCF);
+    });
+
+    console.log("保存的条件格式信息:");
+    console.log(savedConditionalFormats);
   });
 }
