@@ -115,8 +115,15 @@ async function listConditionalFormats() {
     await context.sync();
 
     if (cfRangePairs.length > 0) {
-      cfRangePairs.forEach((pair) => {
+      cfRangePairs.forEach(async (pair) => {
         console.log("条件格式类型:", pair.cf.type);
+        if (pair.cf.type == "Custom") {
+          pair.cf.custom.rule.load("formula");
+          pair.cf.custom.format.font.load("color");
+          await context.sync();
+          console.log(pair.cf.custom.rule.formula);
+          console.log(pair.cf.custom.format.font.color);
+        }
         console.log("应用范围:", pair.range.address);
       });
     } else {
