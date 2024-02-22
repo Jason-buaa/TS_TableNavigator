@@ -119,10 +119,12 @@ async function listConditionalFormats() {
         console.log("条件格式类型:", pair.cf.type);
         if (pair.cf.type == "Custom") {
           pair.cf.custom.rule.load("formula");
-          pair.cf.custom.format.font.load("color");
+          pair.cf.custom.format.font.load("color,bold,italic,strikethrough,underline");
           await context.sync();
           console.log(pair.cf.custom.rule.formula);
           console.log(pair.cf.custom.format.font.color);
+          console.log(pair.cf.custom.format.font.bold);
+          console.log(pair.cf.custom.format.font.underline);
         }
         console.log("应用范围:", pair.range.address);
       });
