@@ -21,6 +21,7 @@ Office.onReady((info) => {
     document.getElementById("apply-custom-format").onclick = applyCustomFormat;
     document.getElementById("clear-all-conditional-formats").onclick = clearAllConditionalFormats;
     document.getElementById("save-all-conditional-formats").onclick = saveConditionalFormats;
+    document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
 let savedConditionalFormats = [];
@@ -303,5 +304,53 @@ async function saveConditionalFormats() {
 
     console.log("保存的条件格式信息:");
     console.log(savedConditionalFormats);
+  });
+}
+async function enableCellHighlight() {
+  await saveConditionalFormats();
+  await Excel.run(async (context) => {
+    let workbook = context.workbook;
+    const cellHightHandlerResult = workbook.onSelectionChanged.add(CellHighlightHandler);
+    await context.sync();
+  });
+}
+
+async function clearHighlightformat() {
+  await Excel.run(async (context) => {
+    let workbook = context.workbook;
+    let worksheets = workbook.worksheets;
+    worksheets.load("items/name");
+    await context.sync();
+    worksheets.items.forEach(async (s) => {
+      let conditionalFormats = s.getRange().conditionalFormats;
+      //TODO:区分不同的条件格式，仅仅清理聚光灯的条件格式。
+      conditionalFormats.clearAll();
+      await context.sync();
+    });
+  });
+}
+
+async function CellHighlightHandler() {
+  await clearHighlightformat();
+  await Excel.run(async (context) => {
+    let workbook = context.workbook;
+    let sheets = workbook.worksheets;
+    let selection = workbook.getSelectedRange();
+    selection.load("rowIndex,columnIndex");
+    sheets.load("items");
+    await context.sync();
+    console.log(sheets.items);
+    console.log(`=ROW()= + ${selection.rowIndex + 1})`);
+    // add new conditional format
+    await context.sync();
+    let rowConditionalFormat = selection.getEntireRow().conditionalFormats.add(Excel.ConditionalFormatType.custom);
+    rowConditionalFormat.custom.format.fill.color = "green";
+    rowConditionalFormat.custom.rule.formula = `=ROW()=  ${selection.rowIndex + 1}`;
+    let columnConditionalFormat = selection
+      .getEntireColumn()
+      .conditionalFormats.add(Excel.ConditionalFormatType.custom);
+    columnConditionalFormat.custom.format.fill.color = "green";
+    columnConditionalFormat.custom.rule.formula = `=Column()=  ${selection.columnIndex + 1}`;
+    await context.sync();
   });
 }
