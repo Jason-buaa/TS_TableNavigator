@@ -116,7 +116,7 @@ async function listConditionalFormats() {
     await context.sync();
 
     if (cfRangePairs.length > 0) {
-      cfRangePairs.forEach(async (pair) => {
+      cfRangePairs.forEach((pair) => {
         console.log("条件格式类型:", pair.cf.type);
         console.log("应用范围:", pair.range.address);
       });
