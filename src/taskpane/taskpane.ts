@@ -307,7 +307,7 @@ async function saveConditionalFormats() {
   });
 }
 async function enableCellHighlight() {
-  await saveConditionalFormats();
+  //await saveConditionalFormats();
   await Excel.run(async (context) => {
     let workbook = context.workbook;
     const cellHightHandlerResult = workbook.onSelectionChanged.add(CellHighlightHandler);
@@ -322,9 +322,46 @@ async function clearHighlightformat() {
     worksheets.load("items/name");
     await context.sync();
     worksheets.items.forEach(async (s) => {
-      let conditionalFormats = s.getRange().conditionalFormats;
+      let worksheetRange = s.getRange();
       //TODO:区分不同的条件格式，仅仅清理聚光灯的条件格式。
-      conditionalFormats.clearAll();
+      // conditionalFormats.load("type");
+      // await context.sync();
+      // conditionalFormats.items.forEach(async (item) => {
+      //   // item.load("type");
+      //   // await context.sync();
+      //   console.log("conditional formats applied:", item.type);
+      //   item.delete();
+      // });
+      worksheetRange.conditionalFormats.load("type");
+      await context.sync();
+      let cfRangePairs: { cf: Excel.ConditionalFormat; range: Excel.Range }[] = [];
+      worksheetRange.conditionalFormats.items.forEach((item) => {
+        const cfRange = item.getRange();
+        cfRange.load("address");
+        cfRangePairs.push({
+          cf: item,
+          range: cfRange,
+        });
+      });
+      await context.sync();
+      if (cfRangePairs.length > 0) {
+        cfRangePairs.forEach(async (pair) => {
+          console.log("条件格式类型:", pair.cf.type);
+          if (pair.cf.type == "Custom") {
+            pair.cf.custom.rule.load("formula");
+            pair.cf.custom.format.font.load("color,bold,italic,strikethrough,underline");
+            await context.sync();
+            console.log(pair.cf.custom.rule.formula);
+            console.log(pair.cf.custom.format.font.color);
+            console.log(pair.cf.custom.format.font.bold);
+            console.log(pair.cf.custom.format.font.underline);
+          }
+          console.log("应用范围:", pair.range.address);
+        });
+      } else {
+        console.log("未应用任何条件格式。");
+      }
+      worksheetRange.conditionalFormats.clearAll();
       await context.sync();
     });
   });
