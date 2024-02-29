@@ -382,12 +382,12 @@ async function CellHighlightHandler() {
     await context.sync();
     let rowConditionalFormat = selection.getEntireRow().conditionalFormats.add(Excel.ConditionalFormatType.custom);
     rowConditionalFormat.custom.format.fill.color = "green";
-    rowConditionalFormat.custom.rule.formula = `=ROW()=  ${selection.rowIndex + 1}`;
+    rowConditionalFormat.custom.rule.formula = `=ROW()=  ${selection.rowIndex + 1}+N("jason")`;
     let columnConditionalFormat = selection
       .getEntireColumn()
       .conditionalFormats.add(Excel.ConditionalFormatType.custom);
     columnConditionalFormat.custom.format.fill.color = "green";
-    columnConditionalFormat.custom.rule.formula = `=Column()=  ${selection.columnIndex + 1}`;
+    columnConditionalFormat.custom.rule.formula = `=Column()=  ${selection.columnIndex + 1}+N("jason")`;
     await context.sync();
   });
 }
