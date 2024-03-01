@@ -11,7 +11,7 @@ Office.onReady((info) => {
     document.getElementById("app-body").style.display = "flex";
     document.getElementById("setup").onclick = setup;
     document.getElementById("apply-color-scale-format").onclick = applyColorScaleFormat;
-    document.getElementById("list-conditional-formats").onclick = listConditionalFormats;
+    document.getElementById("list-conditional-formats").onclick = listConditionalFormatsIncludingCustomFormulas;
     document.getElementById("apply-preset-format").onclick = applyPresetFormat;
     document.getElementById("apply-databar-format").onclick = applyDataBarFormat;
     document.getElementById("apply-icon-set-format").onclick = applyIconSetFormat;
@@ -342,5 +342,62 @@ async function CellHighlightHandler() {
     columnConditionalFormat.custom.format.fill.color = "green";
     columnConditionalFormat.custom.rule.formula = `=Column()=  ${selection.columnIndex + 1}+N("jason")`;
     await context.sync();
+  });
+}
+async function listConditionalFormatsIncludingCustomFormulas() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getItem("Sample");
+    const worksheetRange = sheet.getRange();
+    // 加载条件格式及其类型
+    worksheetRange.conditionalFormats.load("items/type");
+
+    await context.sync();
+
+    let cfDetails: { type: string; address: string; formulas?: string[] }[] = [];
+
+    worksheetRange.conditionalFormats.items.forEach((cf) => {
+      // 加载每个条件格式应用的范围地址
+      const cfRange = cf.getRange();
+      cfRange.load("address");
+
+      // 对于自定义条件格式，尝试加载公式
+      if (cf.type === Excel.ConditionalFormatType.custom) {
+        // 预加载自定义条件格式的公式
+        cf.custom.load("formulas");
+      }
+    });
+
+    // 确保所有预加载的属性完成加载
+    await context.sync();
+
+    // 遍历条件格式项，构建详情对象
+    worksheetRange.conditionalFormats.items.forEach((cf) => {
+      const cfRange = cf.getRange();
+      const detail = {
+        type: cf.type,
+        address: cfRange,
+      };
+
+      // 如果是自定义条件格式，添加公式到详情
+      if (cf.type === Excel.ConditionalFormatType.custom) {
+        detail.formulas = cf.custom.formulas;
+      }
+
+      cfDetails.push(detail);
+    });
+
+    // 输出每个条件格式的详情
+    if (cfDetails.length > 0) {
+      cfDetails.forEach((detail) => {
+        console.log(`条件格式类型: ${detail.type}, 应用范围: ${detail.address}`);
+        if (detail.formulas) {
+          console.log(`自定义条件格式公式: ${detail.formulas.join(", ")}`);
+        }
+      });
+    } else {
+      console.log("未应用任何条件格式。");
+    }
+  }).catch((error) => {
+    console.error(error);
   });
 }
