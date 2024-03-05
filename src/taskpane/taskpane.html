@@ -8,7 +8,25 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1"  />
+    <meta name="author" content="Jaoson Wang" />
+    <meta
+        name="description"
+        content="The MDN Web Docs site
+        provides information about Open Web technologies
+        including HTML, CSS, and APIs for both Web sites and
+        progressive web apps." />
     <title>Contoso Task Pane Add-in</title>
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+
+    <!-- For more information on Fluent UI, visit https://developer.microsoft.com/fluentui#/. -->
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css"/>
+
+    <!-- Template styles -->
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="ms-font-m ms-welcome ms-Fabric">
     <p>My cat is <strong>very</strong> grumpy.</p>
     <em>第一</em><em>第二</em><em>第三</em>
     <p>第四</p>
@@ -29,19 +47,7 @@
     <p>HTML 中用 &lt;p&gt; 来定义段落元素</p>
     <p>我在注释外！</p>
     <!-- <p>我在注释内！</p> -->
-
-
-    <!-- Office JavaScript API -->
-    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
-
-    <!-- For more information on Fluent UI, visit https://developer.microsoft.com/fluentui#/. -->
-    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css"/>
-
-    <!-- Template styles -->
-    <link href="taskpane.css" rel="stylesheet" type="text/css" />
-</head>
-
-<body class="ms-font-m ms-welcome ms-Fabric">
+    <p>Japanese example: ご飯が熱い。</p>
     <section id="sideload-msg" class="ms-welcome__main">
         <h2 class="ms-font-xl">Please <a target="_blank" href="https://learn.microsoft.com/office/dev/add-ins/testing/test-debug-office-add-ins#sideload-an-office-add-in-for-testing">sideload</a> your add-in to see app body.</h2>
     </section>
