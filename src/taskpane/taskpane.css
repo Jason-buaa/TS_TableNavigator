@@ -4,6 +4,29 @@
  */
 
  html,
+
+ h1 {
+    color: red;
+  }
+
+  p,
+  li {
+    color: blue;
+  }
+
+  h1 + p {
+    font-size: 200%;
+  }
+
+  .special {
+    color: orange;
+    font-weight: bold;
+  }
+
+  li em {
+    color: rebeccapurple;
+  }
+
  body {
      width: 100%;
      height: 100%;
@@ -12,10 +35,12 @@
  }
  
  ul {
-     margin: 0;
-     padding: 0;
+     margin: 5;
+     padding: 5;
  }
- 
+ li {
+    list-style-type: square;
+  }
  .ms-welcome__header {
     padding: 20px;
     padding-bottom: 30px;
@@ -78,3 +103,14 @@
 b {
     font-weight: bold;
 }
+
+a:link {
+    color: pink;
+  }
+  
+  a:visited {
+    color: green;
+  }
+  a:hover {
+    text-decoration: none;
+  }
