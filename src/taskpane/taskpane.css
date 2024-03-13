@@ -34,6 +34,16 @@
      padding: 0;
  }
  
+ body {
+  background-color: pink;
+}
+
+@media (min-width: 30em) {/* 在更大的屏幕或窗口中更改背景 */
+  body {
+    background-color: blue;
+  }
+}
+
  ul {
      margin: 5;
      padding: 5;
@@ -114,3 +124,23 @@ a:link {
   a:hover {
     text-decoration: none;
   }
+
+  .outer {
+    border: 5px solid black;
+  }
+  
+  .box {
+    padding: 10px;
+    width: calc(90% - 30px);
+    background-color: rebeccapurple;
+    color: white;
+  }
+  
+  .box2 {
+    margin: 30px;
+    width: 100px;
+    height: 100px;
+    background-color: rebeccapurple;
+    transform: rotate(0.8turn);
+  }
+  
