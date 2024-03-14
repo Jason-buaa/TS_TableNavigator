@@ -24,6 +24,21 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
+
+document.addEventListener("DOMContentLoaded", () => { /*这是一个事件监听器，它监听浏览器的 DOMContentLoaded 事件，其标志了 HTML 文档体完全加载和解析。*/ */
+  function createParagraph() {
+    const para = document.createElement("p");
+    para.textContent = "你点击了按钮！";
+    document.body.appendChild(para);
+  }
+
+  const buttons = document.querySelectorAll("button");
+
+  for (const button of buttons) {
+    button.addEventListener("click", createParagraph);
+  }
+});
+
 const para = document.querySelector(".player");
 
 para.addEventListener("click", updateName);
