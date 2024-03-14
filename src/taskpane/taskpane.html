@@ -27,44 +27,21 @@
 </head>
 
 <body class="ms-font-m ms-welcome ms-Fabric">
-    <h1>我是一级标题</h1>
-    <p>My cat is <strong>very</strong> grumpy.</p>
-    <em>第一</em><em>第二</em><em>第三</em>
-    <p>第四</p>
-    <p>第五</p>
-    <p>第六</p>
-    <ul>
-        <li>项目一</li>
-        <li class="special">项目二</li>
-        <li>项目 <em>三</em></li>
-      </ul>
-    <img
-        src="https://roy-tian.github.io/learning-area/extras/getting-started-web/beginner-html-site/images/firefox-icon.png"
-        alt="Firefox 图标" />
-        <p>A link to my <a href="https://www.mozilla.org/" title="The Mozilla homepage" target="_blank">favorite website</a>.</p>
-    <input type="text" disabled="disabled" />
-            <!-- 使用 disabled 属性来防止终端用户输入文本到输入框中 -->
-    <input type="text" disabled />
+    <h1>Number guessing game</h1>
 
-    <!-- 下面这个输入框不包含 disabled 属性，所以用户可以向其中输入 -->
-    <input type="text" />
-    <p>HTML 中用 <p> 来定义段落元素。</p>
+    <p>We have selected a random number between 1 and 100. See if you can guess it in 10 turns or fewer. We'll tell you if your guess was too high or too low.</p>
 
-    <p>HTML 中用 &lt;p&gt; 来定义段落元素</p>
-    <p>我在注释外！</p>
-    <!-- <p>我在注释内！</p> -->
-    <p>Japanese example: ご飯が熱い。</p>
-    <p>
-      从前有个人叫小高<br />
-      他说写 HTML 感觉最好<br />
-      但他写的代码结构语义一团糟<br />
-      他写的标签谁也懂不了。
-      <hr />
-    </p>
-    <div class="outer"><div class="box">内部盒子的宽度为 90% - 30px。</div></div>
-    <div class="box2"></div>
-    <p class="player">Player 1: Chris</p>
-    <button>Click me</button>
+    <div class="form">
+      <label for="guessField">Enter a guess: </label>
+      <input type="number" min="1" max="100" required id="guessField" class="guessField">
+      <input type="submit" value="Submit guess" class="guessSubmit">
+    </div>
+
+    <div class="resultParas">
+      <p class="guesses"></p>
+      <p class="lastResult"></p>
+      <p class="lowOrHi"></p>
+    </div>
     <section id="sideload-msg" class="ms-welcome__main">
         <h2 class="ms-font-xl">Please <a target="_blank" href="https://learn.microsoft.com/office/dev/add-ins/testing/test-debug-office-add-ins#sideload-an-office-add-in-for-testing">sideload</a> your add-in to see app body.</h2>
     </section>

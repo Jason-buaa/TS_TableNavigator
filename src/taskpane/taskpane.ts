@@ -24,28 +24,78 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
+let randomNumber = Math.floor(Math.random() * 100) + 1;
 
-document.addEventListener("DOMContentLoaded", () => { /*这是一个事件监听器，它监听浏览器的 DOMContentLoaded 事件，其标志了 HTML 文档体完全加载和解析。*/
-  function createParagraph() {
-    const para = document.createElement("p");
-    para.textContent = "你点击了按钮！";
-    document.body.appendChild(para);
+const guesses = document.querySelector(".guesses"); /*常量也用于对值进行命名，但其不像变量，在创建后讲无法修改这个值。
+本例中用常量来保存对用户界面元素的引用。界面元素的文字可能会改变，但引用是不变的。你可以使用关键字 const 和一个名字来创建常量。 */
+const lastResult = document.querySelector(".lastResult");
+const lowOrHi = document.querySelector(".lowOrHi");
+
+const guessSubmit = document.querySelector(".guessSubmit");
+const guessField = document.querySelector(".guessField");
+
+let guessCount = 1;
+let resetButton;
+function checkGuess() {
+  const userGuess = Number(
+    guessField.value
+  ); /*第一行声明了一个名为 userGuess 的变量，并将其设置为在文本字段中输入的值。
+  我们还对这个值应用了内置的 Number() 方法，只是为了确保该值是一个数字。由于我们没有更改此变量，因此我们使用 const 声明。*/
+  if (guessCount === 1) {
+    guesses.textContent = "Previous guesses: ";
+  }
+  guesses.textContent += `${userGuess} `;
+
+  if (userGuess === randomNumber) {
+    lastResult.textContent = "Congratulations! You got it right!";
+    lastResult.style.backgroundColor = "green";
+    lowOrHi.textContent = "";
+    setGameOver();
+  } else if (guessCount === 10) {
+    lastResult.textContent = "!!!GAME OVER!!!";
+    lowOrHi.textContent = "";
+    setGameOver();
+  } else {
+    lastResult.textContent = "Wrong!";
+    lastResult.style.backgroundColor = "red";
+    if (userGuess < randomNumber) {
+      lowOrHi.textContent = "Last guess was too low!";
+    } else if (userGuess > randomNumber) {
+      lowOrHi.textContent = "Last guess was too high!";
+    }
   }
 
-  const buttons = document.querySelectorAll("button");
+  guessCount++;
+  guessField.value = "";
+  guessField.focus();
+}
+guessSubmit.addEventListener("click", checkGuess);
+function setGameOver() {
+  guessField.disabled = true;
+  guessSubmit.disabled = true;
+  resetButton = document.createElement("button");
+  resetButton.textContent = "Start new game";
+  document.body.append(resetButton);
+  resetButton.addEventListener("click", resetGame);
+}
+function resetGame() {
+  guessCount = 1;
 
-  for (const button of buttons) {
-    button.addEventListener("click", createParagraph);
+  const resetParas = document.querySelectorAll(".resultParas p");
+  for (const resetPara of resetParas) {
+    resetPara.textContent = "";
   }
-});
 
-const para = document.querySelector(".player");
+  resetButton.parentNode.removeChild(resetButton);
 
-para.addEventListener("click", updateName);
-function updateName() {
-  //const name = prompt("Enter a new name");
-  Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
-  para.textContent = `Player 1: ABC`;
+  guessField.disabled = false;
+  guessSubmit.disabled = false;
+  guessField.value = "";
+  guessField.focus();
+
+  lastResult.style.backgroundColor = "white";
+
+  randomNumber = Math.floor(Math.random() * 100) + 1;
 }
 
 let savedConditionalFormats = [];
