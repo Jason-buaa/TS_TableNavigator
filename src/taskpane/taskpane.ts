@@ -24,6 +24,15 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
+const para = document.querySelector(".player");
+
+para.addEventListener("click", updateName);
+function updateName() {
+  //const name = prompt("Enter a new name");
+  Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
+  para.textContent = `Player 1: ABC`;
+}
+
 let savedConditionalFormats = [];
 async function setup() {
   await Excel.run(async (context) => {
