@@ -24,26 +24,32 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
-const select = document.querySelector("select");
-const para = document.querySelector("select+p");
 
-select.addEventListener("change", setWeather);
+const btn = document.querySelector("button");
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
 
-function setWeather() {
-  const choice = select.value;
+let WIDTH = document.documentElement.clientWidth;
+let HEIGHT = document.documentElement.clientHeight;
 
-  if (choice === "sunny") {
-    para.textContent = "阳光明媚。穿上短裤吧！去海滩，或公园，吃个冰淇淋。";
-  } else if (choice === "rainy") {
-    para.textContent = "外面下着雨；带上雨衣和雨伞，不要在外面呆太久。";
-  } else if (choice === "snowing") {
-    para.textContent = "大雪纷飞，天寒地冻！最好呆在家里喝杯热巧克力，或者去堆个雪人。";
-  } else if (choice === "overcast") {
-    para.textContent = "虽然没有下雨，但天空灰蒙蒙的，随时都可能变天，所以要带一件雨衣以防万一。";
-  } else {
-    para.textContent = "";
+canvas.width = WIDTH;
+canvas.height = HEIGHT;
+
+function random(number) {
+  return Math.floor(Math.random() * number);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  for (let i = 0; i < 100; i++) {
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(255,0,0,0.5)";
+    ctx.arc(random(WIDTH), random(HEIGHT), random(50), 0, 2 * Math.PI);
+    ctx.fill();
   }
 }
+
+btn.addEventListener("click", draw);
 
 let savedConditionalFormats = [];
 async function setup() {

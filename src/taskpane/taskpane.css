@@ -74,12 +74,20 @@ b {
 }
 
 html {
-  font-family: sans-serif;
+  width: 100%;
+  height: inherit;
+}
+
+canvas {
+  display: block;
 }
 
 body {
-  width: 50%;
-  max-width: 800px;
-  min-width: 480px;
-  margin: 0 auto;
+  margin: 0;
+}
+
+button {
+  position: absolute;
+  top: 5px;
+  left: 5px;
 }
