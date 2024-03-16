@@ -24,7 +24,7 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
-
+//https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Building_blocks/Functions
 const textBox = document.querySelector("#textBox");
 const output = document.querySelector("#output");
 
