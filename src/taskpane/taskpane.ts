@@ -24,14 +24,42 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
-//https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Building_blocks/Functions
-const textBox = document.querySelector("#textBox");
-const output = document.querySelector("#output");
+//https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Building_blocks/Build_your_own_function
 
-textBox.addEventListener("keydown", (event) => {
-  output.textContent = `You pressed "${event.key}".`;
-});
+const btn = document.querySelector("button");
+btn.onclick = function () {
+  //displayMessage("Your inbox is almost full — delete some mails", "warning");
+  displayMessage("Brian: Hi there, how are you today?", "chat");
+};
 
+function displayMessage(msgText, msgType) {
+  const html = document.querySelector("html");
+
+  const panel = document.createElement("div");
+  panel.setAttribute("class", "msgBox");
+  html.appendChild(panel);
+
+  const msg = document.createElement("p");
+  msg.textContent = msgText;
+  panel.appendChild(msg);
+
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "x";
+  panel.appendChild(closeBtn);
+
+  closeBtn.onclick = function () {
+    panel.parentNode.removeChild(panel);
+  };
+  if (msgType === "warning") {
+    msg.style.backgroundImage = "url(../../assets/warning.png)";
+    panel.style.backgroundColor = "red";
+  } else if (msgType === "chat") {
+    msg.style.backgroundImage = "url(../../assets/chat.png)";
+    panel.style.backgroundColor = "aqua";
+  } else {
+    msg.style.paddingLeft = "20px";
+  }
+}
 let savedConditionalFormats = [];
 async function setup() {
   await Excel.run(async (context) => {
