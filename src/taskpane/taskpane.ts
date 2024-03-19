@@ -24,42 +24,45 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
-//https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Building_blocks/Build_your_own_function
-
-const btn = document.querySelector("button");
-btn.onclick = function () {
-  //displayMessage("Your inbox is almost full — delete some mails", "warning");
-  displayMessage("Brian: Hi there, how are you today?", "chat");
-};
-
-function displayMessage(msgText, msgType) {
-  const html = document.querySelector("html");
-
-  const panel = document.createElement("div");
-  panel.setAttribute("class", "msgBox");
-  html.appendChild(panel);
-
-  const msg = document.createElement("p");
-  msg.textContent = msgText;
-  panel.appendChild(msg);
-
-  const closeBtn = document.createElement("button");
-  closeBtn.textContent = "x";
-  panel.appendChild(closeBtn);
-
-  closeBtn.onclick = function () {
-    panel.parentNode.removeChild(panel);
-  };
-  if (msgType === "warning") {
-    msg.style.backgroundImage = "url(../../assets/warning.png)";
-    panel.style.backgroundColor = "red";
-  } else if (msgType === "chat") {
-    msg.style.backgroundImage = "url(../../assets/chat.png)";
-    panel.style.backgroundColor = "aqua";
-  } else {
-    msg.style.paddingLeft = "20px";
-  }
+//https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Building_blocks/Return_values
+const input = document.querySelector(".numberInput");
+const para = document.querySelector("input + p");
+function squared(num) {
+  return num * num;
 }
+
+function cubed(num) {
+  return num * num * num;
+}
+
+function factorial(num) {
+  var x = num;
+  while (x > 1) {
+    num *= x - 1;
+    x--;
+  }
+  return num;
+}
+input.onchange = function () {
+  var num = input.value;
+  if (isNaN(num)) {
+    para.textContent = "You need to enter a number!";
+  } else {
+    para.textContent =
+      num +
+      " squared is " +
+      squared(num) +
+      ". " +
+      num +
+      " cubed is " +
+      cubed(num) +
+      ". " +
+      num +
+      " factorial is " +
+      factorial(num) +
+      ".";
+  }
+};
 let savedConditionalFormats = [];
 async function setup() {
   await Excel.run(async (context) => {
