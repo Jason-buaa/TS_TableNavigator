@@ -24,18 +24,17 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
-const btn = document.querySelector("button");
+const form = document.querySelector("form");
+const fname = document.getElementById("fname");
+const lname = document.getElementById("lname");
+const para = document.querySelector("form + p");
 
-function random(number) {
-  return Math.floor(Math.random() * (number + 1));
-}
-
-function bgChange(e) {
-  const rndCol = `rgb(${random(255)}, ${random(255)}, ${random(255)})`;
-  e.target.style.backgroundColor = rndCol;
-  console.log(e);
-}
-btn.addEventListener("click", bgChange);
+form.addEventListener("submit", (e) => {
+  if (fname.value === "" || lname.value === "") {
+    e.preventDefault();
+    para.textContent = "You need to fill in both names!";
+  }
+});
 
 let savedConditionalFormats = [];
 async function setup() {
