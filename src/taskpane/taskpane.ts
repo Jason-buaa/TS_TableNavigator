@@ -24,45 +24,16 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
-//https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Building_blocks/Return_values
-const input = document.querySelector(".numberInput");
-const para = document.querySelector("input + p");
-function squared(num) {
-  return num * num;
+const btn = document.querySelector("button");
+
+function random(number) {
+  return Math.floor(Math.random() * (number + 1));
 }
 
-function cubed(num) {
-  return num * num * num;
-}
-
-function factorial(num) {
-  var x = num;
-  while (x > 1) {
-    num *= x - 1;
-    x--;
-  }
-  return num;
-}
-input.onchange = function () {
-  var num = input.value;
-  if (isNaN(num)) {
-    para.textContent = "You need to enter a number!";
-  } else {
-    para.textContent =
-      num +
-      " squared is " +
-      squared(num) +
-      ". " +
-      num +
-      " cubed is " +
-      cubed(num) +
-      ". " +
-      num +
-      " factorial is " +
-      factorial(num) +
-      ".";
-  }
-};
+btn.addEventListener("click", () => {
+  const rndCol = `rgb(${random(255)}, ${random(255)}, ${random(255)})`;
+  document.body.style.backgroundColor = rndCol;
+});
 let savedConditionalFormats = [];
 async function setup() {
   await Excel.run(async (context) => {
