@@ -24,17 +24,17 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
-const form = document.querySelector("form");
-const fname = document.getElementById("fname");
-const lname = document.getElementById("lname");
-const para = document.querySelector("form + p");
+const output = document.querySelector("#output");
+function handleClick(e) {
+  output.textContent += `你在 ${e.currentTarget.tagName} 元素上进行了点击\n`;
+}
 
-form.addEventListener("submit", (e) => {
-  if (fname.value === "" || lname.value === "") {
-    e.preventDefault();
-    para.textContent = "You need to fill in both names!";
-  }
-});
+const container = document.querySelector("#container");
+const button = document.querySelector("button");
+
+document.body.addEventListener("click", handleClick);
+container.addEventListener("click", handleClick);
+button.addEventListener("click", handleClick);
 
 let savedConditionalFormats = [];
 async function setup() {
