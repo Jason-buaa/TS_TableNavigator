@@ -24,17 +24,19 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
-const output = document.querySelector("#output");
-function handleClick(e) {
-  output.textContent += `你在 ${e.currentTarget.tagName} 元素上进行了点击\n`;
-}
 
-const container = document.querySelector("#container");
-const button = document.querySelector("button");
+const btn = document.querySelector("button");
+const box = document.querySelector("div");
+const video = document.querySelector("video");
 
-document.body.addEventListener("click", handleClick);
-container.addEventListener("click", handleClick);
-button.addEventListener("click", handleClick);
+btn.addEventListener("click", () => box.classList.remove("hidden"));
+
+video.addEventListener("click", (event) => {
+  event.stopPropagation();
+  video.play();
+});
+
+box.addEventListener("click", () => box.classList.add("hidden"));
 
 let savedConditionalFormats = [];
 async function setup() {
