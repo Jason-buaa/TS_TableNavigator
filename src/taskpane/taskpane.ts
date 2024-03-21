@@ -25,18 +25,21 @@ Office.onReady((info) => {
   }
 });
 
-const btn = document.querySelector("button");
-const box = document.querySelector("div");
-const video = document.querySelector("video");
+function random(number) {
+  return Math.floor(Math.random() * number);
+}
 
-btn.addEventListener("click", () => box.classList.remove("hidden"));
+function bgChange() {
+  const rndCol = `rgb(${random(255)}, ${random(255)}, ${random(255)})`;
+  return rndCol;
+}
 
-video.addEventListener("click", (event) => {
-  event.stopPropagation();
-  video.play();
+const container = document.querySelector("#container");
+
+container.addEventListener("click", (event) => {
+  event.target.style.backgroundColor = bgChange();
 });
 
-box.addEventListener("click", () => box.classList.add("hidden"));
 
 let savedConditionalFormats = [];
 async function setup() {
