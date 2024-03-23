@@ -24,28 +24,41 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
+class Person {
+  name;
 
-const personPrototype = {
-  greet() {
-    console.log(`你好，我的名字是 ${this.name}！`);
-  },
-};
+  constructor(name) {
+    this.name = name;
+  }
 
-function Person(name) {
-  this.name = name;
+  introduceSelf() {
+    console.log(`Hi! I'm ${this.name}`);
+  }
 }
 
-Object.assign(Person.prototype, personPrototype);
-// 或
-// Person.prototype.greet = personPrototype.greet;
-const reuben = new Person("Reuben");
-reuben.greet(); // 你好，我的名字是 Reuben！
+class Student extends Person {
+  #year;
 
-const irma = new Person("Irma");
+  constructor(name, year) {
+    super(name);
+    this.#year = year;
+  }
 
-console.log(Object.hasOwn(irma, "name")); // true
-console.log(Object.hasOwn(irma, "greet")); // false
+  introduceSelf() {
+    console.log(`Hi! I'm ${this.name}, and I'm in year ${this.#year}.`);
+  }
 
+  canStudyArchery() {
+    return this.#year > 1;
+  }
+}
+
+const summers = new Student("Summers", 2);
+
+summers.introduceSelf(); // Hi! I'm Summers, and I'm in year 2.
+summers.canStudyArchery(); // true
+
+summers.#year; // SyntaxError
 
 function random(number) {
   return Math.floor(Math.random() * number);
