@@ -25,14 +25,15 @@ Office.onReady((info) => {
   }
 });
 
-const myDate = new Date();
-let object = myDate;
+const myDate = new Date(1995, 11, 17);
 
-do {
-  object = Object.getPrototypeOf(object);
-  console.log(object);
-} while (object);
+console.log(myDate.getYear()); // 95
 
+myDate.getYear = function () {
+  console.log("别的东西！");
+};
+
+myDate.getYear(); // '别的东西！'
 
 function random(number) {
   return Math.floor(Math.random() * number);
