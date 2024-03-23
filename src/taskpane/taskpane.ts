@@ -41,6 +41,11 @@ Object.assign(Person.prototype, personPrototype);
 const reuben = new Person("Reuben");
 reuben.greet(); // 你好，我的名字是 Reuben！
 
+const irma = new Person("Irma");
+
+console.log(Object.hasOwn(irma, "name")); // true
+console.log(Object.hasOwn(irma, "greet")); // false
+
 
 function random(number) {
   return Math.floor(Math.random() * number);
