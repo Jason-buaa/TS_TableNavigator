@@ -25,6 +25,15 @@ Office.onReady((info) => {
   }
 });
 
+const myDate = new Date();
+let object = myDate;
+
+do {
+  object = Object.getPrototypeOf(object);
+  console.log(object);
+} while (object);
+
+
 function random(number) {
   return Math.floor(Math.random() * number);
 }
