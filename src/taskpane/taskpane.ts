@@ -73,7 +73,7 @@ const myExample = new Example();
 
 myExample.somePublicMethod(); // 'You called me?'
 
-myExample.#somePrivateMethod(); // SyntaxError
+//myExample.#somePrivateMethod(); // SyntaxError
 
 function random(number) {
   return Math.floor(Math.random() * number);
