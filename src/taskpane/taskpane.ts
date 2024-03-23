@@ -25,15 +25,22 @@ Office.onReady((info) => {
   }
 });
 
-const myDate = new Date(1995, 11, 17);
-
-console.log(myDate.getYear()); // 95
-
-myDate.getYear = function () {
-  console.log("别的东西！");
+const personPrototype = {
+  greet() {
+    console.log(`你好，我的名字是 ${this.name}！`);
+  },
 };
 
-myDate.getYear(); // '别的东西！'
+function Person(name) {
+  this.name = name;
+}
+
+Object.assign(Person.prototype, personPrototype);
+// 或
+// Person.prototype.greet = personPrototype.greet;
+const reuben = new Person("Reuben");
+reuben.greet(); // 你好，我的名字是 Reuben！
+
 
 function random(number) {
   return Math.floor(Math.random() * number);
