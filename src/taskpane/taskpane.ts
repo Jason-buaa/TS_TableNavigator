@@ -24,73 +24,61 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
-class Person {
-  name;
+async function populate() {
+  const requestURL =
+    "https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json";
+  const request = new Request(requestURL);
 
-  constructor(name) {
-    this.name = name;
-  }
+  const response = await fetch(request);
+  const superHeroes = await response.json();
 
-  introduceSelf() {
-    console.log(`Hi! I'm ${this.name}`);
+  populateHeader(superHeroes);
+  populateHeroes(superHeroes);
+}
+function populateHeader(obj) {
+  const header = document.querySelector("header");
+  const myH1 = document.createElement("h1");
+  myH1.textContent = obj.squadName;
+  header.appendChild(myH1);
+
+  const myPara = document.createElement("p");
+  myPara.textContent = `Hometown: ${obj.homeTown} // Formed: ${obj.formed}`;
+  header.appendChild(myPara);
+}
+function populateHeroes(obj) {
+  const section = document.querySelector("header + section");
+  const heroes = obj.members;
+
+  for (const hero of heroes) {
+    const myArticle = document.createElement("article");
+    const myH2 = document.createElement("h2");
+    const myPara1 = document.createElement("p");
+    const myPara2 = document.createElement("p");
+    const myPara3 = document.createElement("p");
+    const myList = document.createElement("ul");
+
+    myH2.textContent = hero.name;
+    myPara1.textContent = `Secret identity: ${hero.secretIdentity}`;
+    myPara2.textContent = `Age: ${hero.age}`;
+    myPara3.textContent = "Superpowers:";
+
+    const superPowers = hero.powers;
+    for (const power of superPowers) {
+      const listItem = document.createElement("li");
+      listItem.textContent = power;
+      myList.appendChild(listItem);
+    }
+
+    myArticle.appendChild(myH2);
+    myArticle.appendChild(myPara1);
+    myArticle.appendChild(myPara2);
+    myArticle.appendChild(myPara3);
+    myArticle.appendChild(myList);
+
+    section.appendChild(myArticle);
   }
 }
-
-class Student extends Person {
-  #year;
-
-  constructor(name, year) {
-    super(name);
-    this.#year = year;
-  }
-
-  introduceSelf() {
-    console.log(`Hi! I'm ${this.name}, and I'm in year ${this.#year}.`);
-  }
-
-  canStudyArchery() {
-    return this.#year > 1;
-  }
-}
-
-const summers = new Student("Summers", 2);
-
-summers.introduceSelf(); // Hi! I'm Summers, and I'm in year 2.
-summers.canStudyArchery(); // true
-
-//summers.#year; // SyntaxError
-class Example {
-  somePublicMethod() {
-    this.#somePrivateMethod();
-  }
-
-  #somePrivateMethod() {
-    console.log("You called me?");
-  }
-}
-
-const myExample = new Example();
-
-myExample.somePublicMethod(); // 'You called me?'
-
-//myExample.#somePrivateMethod(); // SyntaxError
-
-function random(number) {
-  return Math.floor(Math.random() * number);
-}
-
-function bgChange() {
-  const rndCol = `rgb(${random(255)}, ${random(255)}, ${random(255)})`;
-  return rndCol;
-}
-
-const container = document.querySelector("#container");
-
-container.addEventListener("click", (event) => {
-  event.target.style.backgroundColor = bgChange();
-});
-
-
+populate();
 let savedConditionalFormats = [];
 async function setup() {
   await Excel.run(async (context) => {
