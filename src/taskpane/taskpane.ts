@@ -30,7 +30,9 @@ async function populate() {
   const request = new Request(requestURL);
 
   const response = await fetch(request);
-  const superHeroes = await response.json();
+  const superHeroesText = await response.text();
+
+  const superHeroes = JSON.parse(superHeroesText);
 
   populateHeader(superHeroes);
   populateHeroes(superHeroes);
