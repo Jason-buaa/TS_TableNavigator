@@ -57,7 +57,7 @@ Ball.prototype.draw = function () {
   ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
   ctx.fill();
 };
-Ball.prototype.update = function () {
+Ball.prototype.update = function () {//在 JavaScript 中使用原型链来定义对象方法的一种常见做法
   if (this.x + this.size >= width) {
     this.velX = -this.velX;
   }
@@ -78,6 +78,11 @@ Ball.prototype.update = function () {
   this.y += this.velY;
 };
 let balls = [];
+let object = new Ball(1, 2, 3, 4, randomColor(), 1);
+do {
+  object = Object.getPrototypeOf(object);
+  console.log(object);
+} while (object);
 
 while (balls.length < 25) {
   let size = random(10, 20);
@@ -88,7 +93,7 @@ while (balls.length < 25) {
     random(-7, 7),
     random(-7, 7),
     randomColor(),
-    size,
+    size
   );
   balls.push(ball);
 }
