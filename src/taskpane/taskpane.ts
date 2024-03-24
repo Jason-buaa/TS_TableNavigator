@@ -24,63 +24,100 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
-async function populate() {
-  const requestURL =
-    "https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json";
-  const request = new Request(requestURL);
+// 设置画布
 
-  const response = await fetch(request);
-  const superHeroesText = await response.text();
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
 
-  const superHeroes = JSON.parse(superHeroesText);
+const width = (canvas.width = window.innerWidth);
+const height = (canvas.height = window.innerHeight);
 
-  populateHeader(superHeroes);
-  populateHeroes(superHeroes);
+// 生成随机数的函数
+
+function random(min, max) {
+  const num = Math.floor(Math.random() * (max - min)) + min;
+  return num;
 }
-function populateHeader(obj) {
-  const header = document.querySelector("header");
-  const myH1 = document.createElement("h1");
-  myH1.textContent = obj.squadName;
-  header.appendChild(myH1);
 
-  const myPara = document.createElement("p");
-  myPara.textContent = `Hometown: ${obj.homeTown} // Formed: ${obj.formed}`;
-  header.appendChild(myPara);
+function randomColor() {
+  return "rgb(" + random(0, 255) + ", " + random(0, 255) + ", " + random(0, 255) + ")";
 }
-function populateHeroes(obj) {
-  const section = document.querySelector("header + section");
-  const heroes = obj.members;
 
-  for (const hero of heroes) {
-    const myArticle = document.createElement("article");
-    const myH2 = document.createElement("h2");
-    const myPara1 = document.createElement("p");
-    const myPara2 = document.createElement("p");
-    const myPara3 = document.createElement("p");
-    const myList = document.createElement("ul");
-
-    myH2.textContent = hero.name;
-    myPara1.textContent = `Secret identity: ${hero.secretIdentity}`;
-    myPara2.textContent = `Age: ${hero.age}`;
-    myPara3.textContent = "Superpowers:";
-
-    const superPowers = hero.powers;
-    for (const power of superPowers) {
-      const listItem = document.createElement("li");
-      listItem.textContent = power;
-      myList.appendChild(listItem);
-    }
-
-    myArticle.appendChild(myH2);
-    myArticle.appendChild(myPara1);
-    myArticle.appendChild(myPara2);
-    myArticle.appendChild(myPara3);
-    myArticle.appendChild(myList);
-
-    section.appendChild(myArticle);
+function Ball(x, y, velX, velY, color, size) {
+  this.x = x;
+  this.y = y;
+  this.velX = velX;
+  this.velY = velY;
+  this.color = color;
+  this.size = size;
+}
+Ball.prototype.draw = function () {
+  ctx.beginPath();
+  ctx.fillStyle = this.color;
+  ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
+  ctx.fill();
+};
+Ball.prototype.update = function () {
+  if (this.x + this.size >= width) {
+    this.velX = -this.velX;
   }
+
+  if (this.x - this.size <= 0) {
+    this.velX = -this.velX;
+  }
+
+  if (this.y + this.size >= height) {
+    this.velY = -this.velY;
+  }
+
+  if (this.y - this.size <= 0) {
+    this.velY = -this.velY;
+  }
+
+  this.x += this.velX;
+  this.y += this.velY;
+};
+let balls = [];
+
+while (balls.length < 25) {
+  let size = random(10, 20);
+  let ball = new Ball(
+    // 为避免绘制错误，球至少离画布边缘球本身一倍宽度的距离
+    random(0 + size, width - size),
+    random(0 + size, height - size),
+    random(-7, 7),
+    random(-7, 7),
+    randomColor(),
+    size,
+  );
+  balls.push(ball);
 }
-populate();
+function loop() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
+  ctx.fillRect(0, 0, width, height);
+
+  for (let i = 0; i < balls.length; i++) {
+    balls[i].draw();
+    balls[i].update();
+    balls[i].collisionDetect();
+  }
+
+  requestAnimationFrame(loop);
+}
+Ball.prototype.collisionDetect = function () {
+  for (let j = 0; j < balls.length; j++) {
+    if (this !== balls[j]) {
+      const dx = this.x - balls[j].x;
+      const dy = this.y - balls[j].y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < this.size + balls[j].size) {
+        balls[j].color = this.color = randomColor();
+      }
+    }
+  }
+};
+loop();
 let savedConditionalFormats = [];
 async function setup() {
   await Excel.run(async (context) => {
