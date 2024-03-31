@@ -4,6 +4,7 @@
  */
 
 /* global console, document, Excel, Office */
+//require("dotenv").config();
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.Excel) {
@@ -24,105 +25,41 @@ Office.onReady((info) => {
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
   }
 });
-// 设置画布
 
-const canvas = document.querySelector("canvas");
-const ctx = canvas.getContext("2d");
+const endpoint = "https://newbie.openai.azure.com";
+const deploymentName = "azureGPT3";
+const apiKey = "toReplace";
+const apiVersion = "2023-03-15-preview";
+const messages = `[
+  {"role": "system", "content": "You are a helpful assistant, teaching people about AI."},
+  {"role": "user", "content": "Does Azure OpenAI support multiple languages?"},
+  {"role": "assistant", "content": "Yes, Azure OpenAI supports several languages, and can translate between them."},
+  {"role": "user", "content": "Do other Azure AI Services support translation too?"}
+]`;
 
-const width = (canvas.width = window.innerWidth);
-const height = (canvas.height = window.innerHeight);
-
-// 生成随机数的函数
-
-function random(min, max) {
-  const num = Math.floor(Math.random() * (max - min)) + min;
-  return num;
-}
-
-function randomColor() {
-  return "rgb(" + random(0, 255) + ", " + random(0, 255) + ", " + random(0, 255) + ")";
-}
-
-function Ball(x, y, velX, velY, color, size) {
-  this.x = x;
-  this.y = y;
-  this.velX = velX;
-  this.velY = velY;
-  this.color = color;
-  this.size = size;
-}
-Ball.prototype.draw = function () {
-  ctx.beginPath();
-  ctx.fillStyle = this.color;
-  ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-  ctx.fill();
-};
-Ball.prototype.update = function () {//在 JavaScript 中使用原型链来定义对象方法的一种常见做法
-  if (this.x + this.size >= width) {
-    this.velX = -this.velX;
-  }
-
-  if (this.x - this.size <= 0) {
-    this.velX = -this.velX;
-  }
-
-  if (this.y + this.size >= height) {
-    this.velY = -this.velY;
-  }
-
-  if (this.y - this.size <= 0) {
-    this.velY = -this.velY;
-  }
-
-  this.x += this.velX;
-  this.y += this.velY;
-};
-let balls = [];
-let object = new Ball(1, 2, 3, 4, randomColor(), 1);
-do {
-  object = Object.getPrototypeOf(object);
-  console.log(object);
-} while (object);
-
-while (balls.length < 25) {
-  let size = random(10, 20);
-  let ball = new Ball(
-    // 为避免绘制错误，球至少离画布边缘球本身一倍宽度的距离
-    random(0 + size, width - size),
-    random(0 + size, height - size),
-    random(-7, 7),
-    random(-7, 7),
-    randomColor(),
-    size
-  );
-  balls.push(ball);
-}
-function loop() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
-  ctx.fillRect(0, 0, width, height);
-
-  for (let i = 0; i < balls.length; i++) {
-    balls[i].draw();
-    balls[i].update();
-    balls[i].collisionDetect();
-  }
-
-  requestAnimationFrame(loop);
-}
-Ball.prototype.collisionDetect = function () {
-  for (let j = 0; j < balls.length; j++) {
-    if (this !== balls[j]) {
-      const dx = this.x - balls[j].x;
-      const dy = this.y - balls[j].y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      if (distance < this.size + balls[j].size) {
-        balls[j].color = this.color = randomColor();
-      }
+fetch(`${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${apiVersion}`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json", "api-key": apiKey },
+  body: JSON.stringify({ messages: JSON.parse(messages) }),
+})
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
     }
-  }
-};
-loop();
+    return response.json();
+  })
+  .then((data) => {
+    if (data.choices && data.choices.length > 0) {
+      const completionContent = data.choices[0].message.content;
+      console.log("Chat Completion:", completionContent);
+    } else {
+      console.log("No completion content found in the response.");
+    }
+  })
+  .catch((error) => {
+    console.error("There has been a problem with your fetch operation:", error);
+  });
+
 let savedConditionalFormats = [];
 async function setup() {
   await Excel.run(async (context) => {
