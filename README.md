@@ -9,3 +9,5 @@
 [2024/4/8](https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Client-side_web_APIs/Manipulating_documents)
 
 [2024/4/9](https://developer.mozilla.org/zh-CN/docs/Learn/Forms/Your_first_form)
+
+[2024/4/9 javascript-api-for-office](https://learn.microsoft.com/en-us/office/dev/add-ins/reference/javascript-api-for-office)
