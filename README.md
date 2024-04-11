@@ -11,3 +11,5 @@
 [2024/4/9](https://developer.mozilla.org/zh-CN/docs/Learn/Forms/Your_first_form)
 
 [2024/4/9 javascript-api-for-office](https://learn.microsoft.com/en-us/office/dev/add-ins/reference/javascript-api-for-office)
+
+[2024/4/11](https://learn.microsoft.com/en-us/office/dev/add-ins/develop/specify-office-hosts-and-api-requirements)
