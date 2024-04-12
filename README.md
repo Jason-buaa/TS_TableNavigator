@@ -13,3 +13,11 @@
 [2024/4/9 javascript-api-for-office](https://learn.microsoft.com/en-us/office/dev/add-ins/reference/javascript-api-for-office)
 
 [2024/4/11](https://learn.microsoft.com/en-us/office/dev/add-ins/develop/specify-office-hosts-and-api-requirements)
+
+2024/4/12:
+
+[使用 Office.onReady() 进行初始化](https://learn.microsoft.com/zh-cn/office/dev/add-ins/develop/initialize-add-in)
+
+[Excel.ConditionalFormat class](https://learn.microsoft.com/zh-cn/javascript/api/excel/excel.conditionalformat?view=excel-js-preview)
+
+[Excel.CellValueConditionalFormat class](https://learn.microsoft.com/zh-cn/javascript/api/excel/excel.cellvalueconditionalformat?view=excel-js-preview)
