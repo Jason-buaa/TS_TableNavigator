@@ -11,54 +11,13 @@ Office.onReady((info) => {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
     document.getElementById("setup").onclick = setup;
-    document.getElementById("apply-color-scale-format").onclick = applyColorScaleFormat;
     document.getElementById("list-conditional-formats").onclick = listConditionalFormatsIncludingCustomFormulas;
-    document.getElementById("apply-preset-format").onclick = applyPresetFormat;
-    document.getElementById("apply-databar-format").onclick = applyDataBarFormat;
-    document.getElementById("apply-icon-set-format").onclick = applyIconSetFormat;
-    document.getElementById("apply-text-format").onclick = applyTextFormat;
-    document.getElementById("apply-cell-value-format").onclick = applyCellValueFormat;
-    document.getElementById("apply-top-bottom-format").onclick = applyTopBottomFormat;
-    document.getElementById("apply-custom-format").onclick = applyCustomFormat;
     document.getElementById("clear-all-conditional-formats").onclick = clearAllConditionalFormats;
     document.getElementById("save-all-conditional-formats").onclick = saveConditionalFormats;
     document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
+    document.getElementById("list-databar").onclick = dataBarConditionalFormat;
   }
 });
-
-const endpoint = "https://newbie.openai.azure.com";
-const deploymentName = "azureGPT3";
-const apiKey = "toReplace";
-const apiVersion = "2023-03-15-preview";
-const messages = `[
-  {"role": "system", "content": "You are a helpful assistant, teaching people about AI."},
-  {"role": "user", "content": "Does Azure OpenAI support multiple languages?"},
-  {"role": "assistant", "content": "Yes, Azure OpenAI supports several languages, and can translate between them."},
-  {"role": "user", "content": "Do other Azure AI Services support translation too?"}
-]`;
-
-fetch(`${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=${apiVersion}`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json", "api-key": apiKey },
-  body: JSON.stringify({ messages: JSON.parse(messages) }),
-})
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
-  })
-  .then((data) => {
-    if (data.choices && data.choices.length > 0) {
-      const completionContent = data.choices[0].message.content;
-      console.log("Chat Completion:", completionContent);
-    } else {
-      console.log("No completion content found in the response.");
-    }
-  })
-  .catch((error) => {
-    console.error("There has been a problem with your fetch operation:", error);
-  });
 
 let savedConditionalFormats = [];
 async function setup() {
@@ -76,6 +35,14 @@ async function setup() {
     format.autofitRows();
 
     sheet.activate();
+    applyColorScaleFormat();
+    applyPresetFormat();
+    applyDataBarFormat();
+    applyIconSetFormat();
+    applyTextFormat();
+    applyCellValueFormat();
+    applyTopBottomFormat();
+    applyCustomFormat();
     await context.sync();
   });
 }
@@ -153,8 +120,10 @@ async function listConditionalFormats() {
 
     if (cfRangePairs.length > 0) {
       cfRangePairs.forEach((pair) => {
-        console.log("条件格式类型:", pair.cf.type);
-        console.log("应用范围:", pair.range.address);
+        if (pair.cf.type === "DataBar") {
+          console.log("条件格式类型:", pair.cf.type);
+          console.log("应用范围:", pair.range.address);
+        }
       });
     } else {
       console.log("未应用任何条件格式。");
@@ -435,5 +404,37 @@ async function listConditionalFormatsIncludingCustomFormulas() {
     }
   }).catch((error) => {
     console.error(error);
+  });
+}
+
+async function dataBarConditionalFormat() {
+  Excel.run(function (context) {
+    var sheet = context.workbook.worksheets.getActiveWorksheet();
+    var range = sheet.getUsedRange();
+    var conditionalFormats = range.conditionalFormats.load("items/type");
+
+    return context.sync().then(function () {
+      var dataBarFormats = conditionalFormats.items.filter((cf) => cf.type === "DataBar");
+      dataBarFormats.forEach(function (dataBarFormat) {
+        dataBarFormat.load(
+          "axisColor,axisFormat,barDirection,lowerBoundRule,negativeFormat,positiveFormat,showDataBarOnly,upperBoundRule"
+        );
+      });
+
+      return context.sync().then(function () {
+        dataBarFormats.forEach(function (dataBarFormat) {
+          console.log("Axis Color: " + dataBarFormat.axisColor);
+          console.log("Axis Format: " + dataBarFormat.axisFormat);
+          console.log("Bar Direction: " + dataBarFormat.barDirection);
+          console.log("Lower Bound Rule: " + JSON.stringify(dataBarFormat.lowerBoundRule));
+          console.log("Negative Format: " + JSON.stringify(dataBarFormat.negativeFormat));
+          console.log("Positive Format: " + JSON.stringify(dataBarFormat.positiveFormat));
+          console.log("Show Data Bar Only: " + dataBarFormat.showDataBarOnly);
+          console.log("Upper Bound Rule: " + JSON.stringify(dataBarFormat.upperBoundRule));
+        });
+      });
+    });
+  }).catch(function (error) {
+    console.log(error);
   });
 }
