@@ -14,10 +14,28 @@ Office.onReady((info) => {
   }
 });
 
-
 //TODO
+async function addNewStyle() {
+  await Excel.run(async (context) => {
+    let styles = context.workbook.styles;
 
+    // Add a new style to the style collection.
+    // Styles is in the Home tab ribbon.
+    styles.add("Highlighter");
 
+    let newStyle = styles.getItem("Highlighter");
+
+    // The "Diagonal Orientation Style" properties.
+    newStyle.textOrientation = 0;
+    newStyle.autoIndent = true;
+    newStyle.includeProtection = true;
+    newStyle.shrinkToFit = true;
+    newStyle.locked = false;
+    await context.sync();
+
+    console.log("Successfully added a new style with Highlighter to the Home tab ribbon.");
+  });
+}
 
 async function setup() {
   await Excel.run(async (context) => {
@@ -42,6 +60,7 @@ async function setup() {
     applyCellValueFormat();
     applyTopBottomFormat();
     applyCustomFormat();
+    addNewStyle();
     await context.sync();
   });
 }
