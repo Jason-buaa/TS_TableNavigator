@@ -26,11 +26,8 @@ async function addNewStyle() {
     let newStyle = styles.getItem("Highlighter");
 
     // The "Diagonal Orientation Style" properties.
-    newStyle.textOrientation = 0;
-    newStyle.autoIndent = true;
-    newStyle.includeProtection = true;
-    newStyle.shrinkToFit = true;
-    newStyle.locked = false;
+    newStyle.includeFont = true;
+    newStyle.fill.color = "green";
     await context.sync();
 
     console.log("Successfully added a new style with Highlighter to the Home tab ribbon.");
