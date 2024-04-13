@@ -11,15 +11,14 @@ Office.onReady((info) => {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
     document.getElementById("setup").onclick = setup;
-    document.getElementById("list-conditional-formats").onclick = listConditionalFormatsIncludingCustomFormulas;
-    document.getElementById("clear-all-conditional-formats").onclick = clearAllConditionalFormats;
-    document.getElementById("save-all-conditional-formats").onclick = saveConditionalFormats;
-    document.getElementById("enable-CellHighlight").onclick = enableCellHighlight;
-    document.getElementById("list-databar").onclick = dataBarConditionalFormat;
   }
 });
 
-let savedConditionalFormats = [];
+
+//TODO
+
+
+
 async function setup() {
   await Excel.run(async (context) => {
     context.workbook.worksheets.getItemOrNullObject("Sample").delete();
@@ -96,39 +95,6 @@ function queueCommandsToCreateProfitLossTable(sheet: Excel.Worksheet) {
     ["Northwind", -858.21, 35.33, 49.01, 112.68],
   ]);
   profitLossTable.getDataBodyRange().numberFormat = [["$#,##0.00"]];
-}
-
-async function listConditionalFormats() {
-  await Excel.run(async (context) => {
-    const sheet = context.workbook.worksheets.getItem("Sample");
-    const worksheetRange = sheet.getRange();
-    worksheetRange.conditionalFormats.load("type");
-
-    await context.sync();
-
-    let cfRangePairs: { cf: Excel.ConditionalFormat; range: Excel.Range }[] = [];
-    worksheetRange.conditionalFormats.items.forEach((item) => {
-      const cfRange = item.getRange();
-      cfRange.load("address");
-      cfRangePairs.push({
-        cf: item,
-        range: cfRange,
-      });
-    });
-
-    await context.sync();
-
-    if (cfRangePairs.length > 0) {
-      cfRangePairs.forEach((pair) => {
-        if (pair.cf.type === "DataBar") {
-          console.log("条件格式类型:", pair.cf.type);
-          console.log("应用范围:", pair.range.address);
-        }
-      });
-    } else {
-      console.log("未应用任何条件格式。");
-    }
-  });
 }
 
 async function applyColorScaleFormat() {
@@ -255,186 +221,5 @@ async function applyCustomFormat() {
     conditionalFormat.custom.format.font.color = "green";
 
     await context.sync();
-  });
-}
-async function clearAllConditionalFormats() {
-  await Excel.run(async (context) => {
-    const sheet = context.workbook.worksheets.getItem("Sample");
-    const range = sheet.getRange();
-    range.conditionalFormats.clearAll();
-
-    await context.sync();
-  });
-}
-// 保存当前工作表所有条件格式
-async function saveConditionalFormats() {
-  await Excel.run(async (context) => {
-    const sheet = context.workbook.worksheets.getActiveWorksheet();
-    const worksheetRange = sheet.getRange();
-    worksheetRange.conditionalFormats.load("type");
-
-    await context.sync();
-
-    savedConditionalFormats = [];
-    worksheetRange.conditionalFormats.items.forEach((item) => {
-      let savedCF = {
-        type: item.type,
-        rangeAddress: item.getRange().address,
-        criteria: [],
-        format: null,
-        rule: null,
-      };
-
-      switch (item.type) {
-        case "ContainsText":
-        case "CellValue":
-        case "TopBottom":
-        case "Custom":
-          savedCF.format = item.custom.format;
-          savedCF.rule = item.custom.rule;
-          break;
-      }
-
-      savedConditionalFormats.push(savedCF);
-    });
-
-    console.log("保存的条件格式信息:");
-    console.log(savedConditionalFormats);
-  });
-}
-async function enableCellHighlight() {
-  //await saveConditionalFormats();
-  await Excel.run(async (context) => {
-    let workbook = context.workbook;
-    const cellHightHandlerResult = workbook.onSelectionChanged.add(CellHighlightHandler);
-    await context.sync();
-  });
-}
-
-async function clearHighlightformat() {
-  await Excel.run(async (context) => {
-    let workbook = context.workbook;
-    let worksheets = workbook.worksheets;
-    worksheets.load("items/name");
-    await context.sync();
-    worksheets.items.forEach(async (s) => {
-      let worksheetRange = s.getRange();
-      worksheetRange.conditionalFormats.clearAll();
-      await context.sync();
-    });
-  });
-}
-
-async function CellHighlightHandler() {
-  await clearHighlightformat();
-  await Excel.run(async (context) => {
-    let workbook = context.workbook;
-    let sheets = workbook.worksheets;
-    let selection = workbook.getSelectedRange();
-    selection.load("rowIndex,columnIndex");
-    sheets.load("items");
-    await context.sync();
-    console.log(sheets.items);
-    console.log(`=ROW()= + ${selection.rowIndex + 1})`);
-    // add new conditional format
-    await context.sync();
-    let rowConditionalFormat = selection.getEntireRow().conditionalFormats.add(Excel.ConditionalFormatType.custom);
-    rowConditionalFormat.custom.format.fill.color = "green";
-    rowConditionalFormat.custom.rule.formula = `=ROW()=  ${selection.rowIndex + 1}+N("jason")`;
-    let columnConditionalFormat = selection
-      .getEntireColumn()
-      .conditionalFormats.add(Excel.ConditionalFormatType.custom);
-    columnConditionalFormat.custom.format.fill.color = "green";
-    columnConditionalFormat.custom.rule.formula = `=Column()=  ${selection.columnIndex + 1}+N("jason")`;
-    await context.sync();
-  });
-}
-async function listConditionalFormatsIncludingCustomFormulas() {
-  await Excel.run(async (context) => {
-    const sheet = context.workbook.worksheets.getItem("Sample");
-    const worksheetRange = sheet.getRange();
-    // 加载条件格式及其类型
-    worksheetRange.conditionalFormats.load("items/type");
-
-    await context.sync();
-
-    let cfDetails: { type: string; address: string; formulas?: string[] }[] = [];
-
-    worksheetRange.conditionalFormats.items.forEach((cf) => {
-      // 加载每个条件格式应用的范围地址
-      const cfRange = cf.getRange();
-      cfRange.load("address");
-
-      // 对于自定义条件格式，尝试加载公式
-      if (cf.type === Excel.ConditionalFormatType.custom) {
-        // 预加载自定义条件格式的公式
-        cf.custom.load("formulas");
-      }
-    });
-
-    // 确保所有预加载的属性完成加载
-    await context.sync();
-
-    // 遍历条件格式项，构建详情对象
-    worksheetRange.conditionalFormats.items.forEach((cf) => {
-      const cfRange = cf.getRange();
-      const detail = {
-        type: cf.type,
-        address: cfRange,
-      };
-
-      // 如果是自定义条件格式，添加公式到详情
-      if (cf.type === Excel.ConditionalFormatType.custom) {
-        detail.formulas = cf.custom.formulas;
-      }
-
-      cfDetails.push(detail);
-    });
-
-    // 输出每个条件格式的详情
-    if (cfDetails.length > 0) {
-      cfDetails.forEach((detail) => {
-        console.log(`条件格式类型: ${detail.type}, 应用范围: ${detail.address}`);
-        if (detail.formulas) {
-          console.log(`自定义条件格式公式: ${detail.formulas.join(", ")}`);
-        }
-      });
-    } else {
-      console.log("未应用任何条件格式。");
-    }
-  }).catch((error) => {
-    console.error(error);
-  });
-}
-
-async function dataBarConditionalFormat() {
-  Excel.run(function (context) {
-    var sheet = context.workbook.worksheets.getActiveWorksheet();
-    var range = sheet.getUsedRange();
-    var conditionalFormats = range.conditionalFormats.load("items/type");
-
-    return context.sync().then(function () {
-      var dataBarFormats = conditionalFormats.items.filter((cf) => cf.type === "DataBar");
-      dataBarFormats.forEach(function (dataBarFormat) {
-        dataBarFormat.load(
-          "axisColor,axisFormat,barDirection,lowerBoundRule,negativeFormat,positiveFormat,showDataBarOnly,upperBoundRule"
-        );
-      });
-
-      return context.sync().then(function () {
-        dataBarFormats.forEach(function (dataBarFormat) {
-          console.log("Axis Color: " + dataBarFormat.axisColor);
-          console.log("Axis Format: " + dataBarFormat.axisFormat);
-          console.log("Bar Direction: " + dataBarFormat.barDirection);
-          console.log("Lower Bound Rule: " + JSON.stringify(dataBarFormat.lowerBoundRule));
-          console.log("Negative Format: " + JSON.stringify(dataBarFormat.negativeFormat));
-          console.log("Positive Format: " + JSON.stringify(dataBarFormat.positiveFormat));
-          console.log("Show Data Bar Only: " + dataBarFormat.showDataBarOnly);
-          console.log("Upper Bound Rule: " + JSON.stringify(dataBarFormat.upperBoundRule));
-        });
-      });
-    });
-  }).catch(function (error) {
-    console.log(error);
   });
 }
