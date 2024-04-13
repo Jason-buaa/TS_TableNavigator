@@ -11,10 +11,51 @@ Office.onReady((info) => {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
     document.getElementById("setup").onclick = setup;
+    document.getElementById("enable-highlighter").onclick = enableCellHighlight;
+    document.getElementById("disable-highlighter").onclick = disableCellHighlight;
   }
 });
 
 //TODO
+//2024.4.13:To remove the handler by code.
+let eventResult: OfficeExtension.EventHandlerResult<Excel.Workbook>;
+
+async function disableCellHighlight() {
+  await Excel.run(async (context) => {
+    let workbook = context.workbook;
+    let selectedSheet = workbook.worksheets.getActiveWorksheet();
+    selectedSheet.getRange().style = Excel.BuiltInStyle.normal;
+    eventResult.remove();
+    await context.sync();
+  });
+}
+async function enableCellHighlight() {
+  await Excel.run(async (context) => {
+    let workbook = context.workbook;
+    eventResult = workbook.onSelectionChanged.add(CellHighlightHandler);
+    await context.sync();
+  });
+}
+async function CellHighlightHandler() {
+  await Excel.run(async (context) => {
+    let workbook = context.workbook;
+    let selectedSheet = workbook.worksheets.getActiveWorksheet();
+    let selection = workbook.getSelectedRange();
+    selection.load("rowIndex,columnIndex");
+    await context.sync();
+    // Assuming 'rowIndex' and 'columnIndex' are the row and column index of the selected cell
+    let rowIndex = selection.rowIndex;
+    console.log(`=ROW()= + ${selection.rowIndex + 1})`);
+    let columnIndex = selection.columnIndex;
+    // Convert column index to letter
+    let colLetter = String.fromCharCode(65 + columnIndex); // 65 is the ASCII value for 'A'
+    selectedSheet.getRange().style = Excel.BuiltInStyle.normal;
+    // Apply the style to the entire row and column
+    selectedSheet.getRange(rowIndex + 1 + ":" + (rowIndex + 1)).style = Excel.BuiltInStyle.neutral;
+    selectedSheet.getRange(colLetter + ":" + colLetter).style = Excel.BuiltInStyle.neutral;
+  });
+}
+
 async function addNewStyle() {
   await Excel.run(async (context) => {
     let styles = context.workbook.styles;
