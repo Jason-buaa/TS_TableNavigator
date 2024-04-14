@@ -98,7 +98,7 @@ async function setup() {
     applyCellValueFormat();
     applyTopBottomFormat();
     applyCustomFormat();
-    addNewStyle();
+    //addNewStyle();
     await context.sync();
   });
 }
