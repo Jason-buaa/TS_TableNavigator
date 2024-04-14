@@ -18,10 +18,9 @@ Office.onReady((info) => {
 
 //TODO
 //2024.4.13:To remove the handler by code.
-let eventResult: OfficeExtension.EventHandlerResult<Excel.Workbook>;
-
+let eventResult;
 async function disableCellHighlight() {
-  await Excel.run(async (context) => {
+  await Excel.run(eventResult.context, async (context) => {
     let workbook = context.workbook;
     let selectedSheet = workbook.worksheets.getActiveWorksheet();
     selectedSheet.getRange().style = Excel.BuiltInStyle.normal;
@@ -36,7 +35,7 @@ async function enableCellHighlight() {
     await context.sync();
   });
 }
-async function CellHighlightHandler() {
+async function CellHighlightHandler(event) {
   await Excel.run(async (context) => {
     let workbook = context.workbook;
     let selectedSheet = workbook.worksheets.getActiveWorksheet();
@@ -46,6 +45,7 @@ async function CellHighlightHandler() {
     // Assuming 'rowIndex' and 'columnIndex' are the row and column index of the selected cell
     let rowIndex = selection.rowIndex;
     console.log(`=ROW()= + ${selection.rowIndex + 1})`);
+    console.log("Address of current selection: " + event.address);
     let columnIndex = selection.columnIndex;
     // Convert column index to letter
     let colLetter = String.fromCharCode(65 + columnIndex); // 65 is the ASCII value for 'A'

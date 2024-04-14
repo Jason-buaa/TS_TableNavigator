@@ -21,3 +21,7 @@
 [Excel.ConditionalFormat class](https://learn.microsoft.com/zh-cn/javascript/api/excel/excel.conditionalformat?view=excel-js-preview)
 
 [Excel.CellValueConditionalFormat class](https://learn.microsoft.com/zh-cn/javascript/api/excel/excel.cellvalueconditionalformat?view=excel-js-preview)
+
+2024/4/14:
+
+[OfficeExtension.EventHandlerResult class](https://learn.microsoft.com/zh-cn/javascript/api/office/officeextension.eventhandlerresult?view=excel-js-preview)
