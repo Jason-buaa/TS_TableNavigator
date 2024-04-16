@@ -33,7 +33,10 @@ async function enableCellHighlight() {
     let workbook = context.workbook;
     let selectedSheet = workbook.worksheets.getActiveWorksheet();
     eventResult = selectedSheet.onSelectionChanged.add(CellHighlightHandler);
+    let usedRange = selectedSheet.getUsedRange();
+    usedRange.load("address");
     await context.sync();
+    console.log(`The address of the used range in the worksheet is "${usedRange.address}"`);
   });
 }
 async function CellHighlightHandler(event) {
