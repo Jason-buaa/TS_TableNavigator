@@ -31,7 +31,8 @@ async function disableCellHighlight() {
 async function enableCellHighlight() {
   await Excel.run(async (context) => {
     let workbook = context.workbook;
-    eventResult = workbook.onSelectionChanged.add(CellHighlightHandler);
+    let selectedSheet = workbook.worksheets.getActiveWorksheet();
+    eventResult = selectedSheet.onSelectionChanged.add(CellHighlightHandler);
     await context.sync();
   });
 }
