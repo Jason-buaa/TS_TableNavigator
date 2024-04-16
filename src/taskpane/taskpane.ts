@@ -19,6 +19,8 @@ Office.onReady((info) => {
 //TODO
 //2024.4.13:To remove the handler by code.
 let eventResult;
+let rowCount: number;
+let columnCount: number;
 async function disableCellHighlight() {
   await Excel.run(eventResult.context, async (context) => {
     let workbook = context.workbook;
@@ -34,9 +36,15 @@ async function enableCellHighlight() {
     let selectedSheet = workbook.worksheets.getActiveWorksheet();
     eventResult = selectedSheet.onSelectionChanged.add(CellHighlightHandler);
     let usedRange = selectedSheet.getUsedRange();
-    usedRange.load("address");
+    usedRange.load("address,rowCount,columnCount");
     await context.sync();
+    // 获取行数和列数
+    rowCount = usedRange.rowCount;
+    columnCount = usedRange.columnCount;
+
     console.log(`The address of the used range in the worksheet is "${usedRange.address}"`);
+    console.log(`The total number of rows in the used range is ${rowCount}`);
+    console.log(`The total number of columns in the used range is ${columnCount}`);
   });
 }
 async function CellHighlightHandler(event) {
@@ -55,8 +63,12 @@ async function CellHighlightHandler(event) {
     let colLetter = String.fromCharCode(65 + columnIndex); // 65 is the ASCII value for 'A'
     selectedSheet.getRange().style = Excel.BuiltInStyle.normal;
     // Apply the style to the entire row and column
+    let displayMaxRows = Math.max(40, rowCount);
+    let displayMaxColumns = Math.max(40, columnCount);
     selectedSheet.getRange(rowIndex + 1 + ":" + (rowIndex + 1)).style = Excel.BuiltInStyle.neutral;
     selectedSheet.getRange(colLetter + ":" + colLetter).style = Excel.BuiltInStyle.neutral;
+    console.log("Max rows to highlight: " + displayMaxRows);
+    console.log("Max columns to highlight: " + displayMaxColumns);
   });
 }
 
