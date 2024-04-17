@@ -56,8 +56,9 @@ async function CellHighlightHandler(event) {
     await context.sync();
     // Assuming 'rowIndex' and 'columnIndex' are the row and column index of the selected cell
     let rowIndex = selection.rowIndex;
-    console.log(`=ROW()= + ${selection.rowIndex + 1})`);
-    console.log("Address of current selection: " + event.address);
+    let cellAdress = event.address;
+    //console.log(`=ROW()= + ${selection.rowIndex + 1})`);
+    console.log("Address of current selection: " + cellAdress);
     let columnIndex = selection.columnIndex;
     // Convert column index to letter
     let colLetter = String.fromCharCode(65 + columnIndex); // 65 is the ASCII value for 'A'
@@ -65,7 +66,7 @@ async function CellHighlightHandler(event) {
     // Apply the style to the entire row and column
     let displayMaxRows = Math.max(40, rowCount);
     let displayMaxColumns = Math.max(40, columnCount);
-    selectedSheet.getRange(rowIndex + 1 + ":" + (rowIndex + 1)).style = Excel.BuiltInStyle.neutral;
+    selectedSheet.getRange("A" + (rowIndex + 1) + ":" + colLetter + (rowIndex + 1)).style = Excel.BuiltInStyle.neutral;
     selectedSheet.getRange(colLetter + ":" + colLetter).style = Excel.BuiltInStyle.neutral;
     console.log("Max rows to highlight: " + displayMaxRows);
     console.log("Max columns to highlight: " + displayMaxColumns);
