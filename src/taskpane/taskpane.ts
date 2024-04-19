@@ -61,16 +61,30 @@ async function CellHighlightHandler(event) {
     console.log("Address of current selection: " + cellAdress);
     let columnIndex = selection.columnIndex;
     // Convert column index to letter
-    let colLetter = String.fromCharCode(65 + columnIndex); // 65 is the ASCII value for 'A'
+    let colLetter = convertColumnNumberToLetters(columnIndex); // 65 is the ASCII value for 'A'
     selectedSheet.getRange().style = Excel.BuiltInStyle.normal;
     // Apply the style to the entire row and column
     let displayMaxRows = Math.max(40, rowCount);
     let displayMaxColumns = Math.max(40, columnCount);
-    selectedSheet.getRange("A" + (rowIndex + 1) + ":" + colLetter + (rowIndex + 1)).style = Excel.BuiltInStyle.neutral;
-    selectedSheet.getRange(colLetter + ":" + colLetter).style = Excel.BuiltInStyle.neutral;
-    console.log("Max rows to highlight: " + displayMaxRows);
-    console.log("Max columns to highlight: " + displayMaxColumns);
+    let DisplayRowRange = "A" + (rowIndex + 1) + ":" + convertColumnNumberToLetters(displayMaxColumns) + (rowIndex + 1);
+    selectedSheet.getRange(DisplayRowRange).style = Excel.BuiltInStyle.neutral;
+    let DisplayColumnRange = colLetter + "1" + ":" + colLetter + displayMaxRows;
+    selectedSheet.getRange(DisplayColumnRange).style = Excel.BuiltInStyle.neutral;
+    console.log("rows to highlight: " + DisplayColumnRange);
+    console.log("columns to highlight: " + DisplayRowRange);
   });
+}
+
+function convertColumnNumberToLetters(columnNumber) {
+  let temp;
+  let letters = "";
+  columnNumber = columnNumber + 1;
+  while (columnNumber > 0) {
+    temp = (columnNumber - 1) % 26;
+    letters = String.fromCharCode(temp + 65) + letters;
+    columnNumber = Math.floor((columnNumber - temp - 1) / 26);
+  }
+  return letters;
 }
 
 async function addNewStyle() {
