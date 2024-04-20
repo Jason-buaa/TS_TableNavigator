@@ -28,3 +28,6 @@
 
 2024/4/20:
 [语法和数据类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Grammar_and_types)
+
+TODO:
+[TRY CATCH](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Control_flow_and_error_handling)
