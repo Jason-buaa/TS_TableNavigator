@@ -33,6 +33,7 @@ async function disableCellHighlight() {
 async function enableCellHighlight() {
   await Excel.run(async (context) => {
     let workbook = context.workbook;
+    let 中文变量 = "你好，世界！";
     let selectedSheet = workbook.worksheets.getActiveWorksheet();
     eventResult = selectedSheet.onSelectionChanged.add(CellHighlightHandler);
     let usedRange = selectedSheet.getUsedRange();
@@ -41,7 +42,7 @@ async function enableCellHighlight() {
     // 获取行数和列数
     rowCount = usedRange.rowCount;
     columnCount = usedRange.columnCount;
-
+    console.log(中文变量);
     console.log(`The address of the used range in the worksheet is "${usedRange.address}"`);
     console.log(`The total number of rows in the used range is ${rowCount}`);
     console.log(`The total number of columns in the used range is ${columnCount}`);

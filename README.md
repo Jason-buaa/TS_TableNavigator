@@ -25,3 +25,6 @@
 2024/4/14:
 
 [OfficeExtension.EventHandlerResult class](https://learn.microsoft.com/zh-cn/javascript/api/office/officeextension.eventhandlerresult?view=excel-js-preview)
+
+2024/4/20:
+[语法和数据类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Grammar_and_types)
