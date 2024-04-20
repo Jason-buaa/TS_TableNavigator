@@ -64,8 +64,8 @@ async function CellHighlightHandler(event) {
     let colLetter = convertColumnNumberToLetters(columnIndex); // 65 is the ASCII value for 'A'
     selectedSheet.getRange().style = Excel.BuiltInStyle.normal;
     // Apply the style to the entire row and column
-    let displayMaxRows = Math.max(40, rowCount);
-    let displayMaxColumns = Math.max(40, columnCount);
+    let displayMaxRows = Math.max(100, rowCount, rowIndex);
+    let displayMaxColumns = Math.max(100, columnCount, columnIndex);
     let DisplayRowRange = "A" + (rowIndex + 1) + ":" + convertColumnNumberToLetters(displayMaxColumns) + (rowIndex + 1);
     selectedSheet.getRange(DisplayRowRange).style = Excel.BuiltInStyle.neutral;
     let DisplayColumnRange = colLetter + "1" + ":" + colLetter + displayMaxRows;
