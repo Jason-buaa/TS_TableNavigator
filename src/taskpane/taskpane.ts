@@ -18,13 +18,13 @@ Office.onReady((info) => {
 
 //TODO
 //2024.4.13:To remove the handler by code.
-let eventResult;
+let eventResult: OfficeExtension.EventHandlerResult<Excel.WorksheetSelectionChangedEventArgs>;
 let rowCount: number;
 let columnCount: number;
+let workbook: Excel.Workbook;
+let selectedSheet: Excel.Worksheet;
 async function disableCellHighlight() {
   await Excel.run(eventResult.context, async (context) => {
-    let workbook = context.workbook;
-    let selectedSheet = workbook.worksheets.getActiveWorksheet();
     selectedSheet.getRange().style = Excel.BuiltInStyle.normal;
     eventResult.remove();
     await context.sync();
@@ -32,20 +32,19 @@ async function disableCellHighlight() {
 }
 async function enableCellHighlight() {
   await Excel.run(async (context) => {
-    let workbook = context.workbook;
-    let 中文变量 = "你好，世界！";
-    let selectedSheet = workbook.worksheets.getActiveWorksheet();
+    workbook = context.workbook;
+    selectedSheet = workbook.worksheets.getActiveWorksheet();
     eventResult = selectedSheet.onSelectionChanged.add(CellHighlightHandler);
+    selectedSheet.onDeactivated.add(disableCellHighlight);
     let usedRange = selectedSheet.getUsedRange();
     usedRange.load("address,rowCount,columnCount");
     await context.sync();
     // 获取行数和列数
     rowCount = usedRange.rowCount;
     columnCount = usedRange.columnCount;
-    console.log(中文变量);
     console.log(`The address of the used range in the worksheet is "${usedRange.address}"`);
-    console.log(`The total number of rows in the used range is ${rowCount}`);
-    console.log(`The total number of columns in the used range is ${columnCount}`);
+    //console.log(`The total number of rows in the used range is ${rowCount}`);
+    //console.log(`The total number of columns in the used range is ${columnCount}`);
   });
 }
 async function CellHighlightHandler(event) {
