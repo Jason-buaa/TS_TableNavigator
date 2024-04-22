@@ -19,6 +19,10 @@
     <!-- Office JavaScript API -->
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
 
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
     <!-- For more information on Fluent UI, visit https://developer.microsoft.com/fluentui#/. -->
     <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css"/>
 
@@ -27,7 +31,8 @@
 </head>
 
 <body class="ms-font-m ms-welcome ms-Fabric">
-  
+    When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+    $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
     <section id="sideload-msg" class="ms-welcome__main">
         <h2 class="ms-font-xl">Please <a target="_blank" href="https://learn.microsoft.com/office/dev/add-ins/testing/test-debug-office-add-ins#sideload-an-office-add-in-for-testing">sideload</a> your add-in to see app body.</h2>
     </section>

@@ -34,3 +34,7 @@
 [TRY CATCH](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Control_flow_and_error_handling)
 
 [ Office 加载项平台构建](https://learn.microsoft.com/zh-cn/office/dev/add-ins/overview/core-concepts-office-add-ins?view=excel-js-preview)
+
+2024/4/22：
+
+[MathJax](https://docs.mathjax.org/en/latest/basic/mathematics.html)
