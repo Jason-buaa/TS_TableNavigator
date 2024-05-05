@@ -40,4 +40,7 @@
 [MathJax](https://docs.mathjax.org/en/latest/basic/mathematics.html)
 
 2024/5/5：
+
 [Azure Blob 存储文档](https://learn.microsoft.com/zh-cn/azure/storage/blobs/)
+
+[Quex](https://quex.sourceforge.net/doc/html/main.html)
