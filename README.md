@@ -44,3 +44,7 @@
 [Azure Blob 存储文档](https://learn.microsoft.com/zh-cn/azure/storage/blobs/)
 
 [Quex](https://quex.sourceforge.net/doc/html/main.html)
+
+2024/5/7：
+
+[MATLAB Interface for Azure Services](https://github.com/mathworks-ref-arch/matlab-azure-services)
