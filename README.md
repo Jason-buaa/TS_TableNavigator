@@ -48,3 +48,7 @@
 2024/5/7：
 
 [MATLAB Interface for Azure Services](https://github.com/mathworks-ref-arch/matlab-azure-services)
+
+2024/5/8:
+
+[Motor Control Applications](https://ww2.mathworks.cn/videos/building-motor-control-applications-with-embedded-coder-and-nxp-motor-control-development-toolbox-for-s32k-mcus-1484342382496.html)
