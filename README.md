@@ -52,3 +52,5 @@
 2024/5/8:
 
 [Motor Control Applications](https://ww2.mathworks.cn/videos/building-motor-control-applications-with-embedded-coder-and-nxp-motor-control-development-toolbox-for-s32k-mcus-1484342382496.html)
+
+[AZURE RTOS, ThreadX](https://github.com/eclipse-threadx/threadx)
