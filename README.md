@@ -56,4 +56,7 @@
 [AZURE RTOS, ThreadX](https://github.com/eclipse-threadx/threadx)
 
 2024/5/9:
+
 [Motor Control with MBDT](https://www.nxp.com/design/training/bldc-motor-control-with-mbdt:TIP-BLDC-MBDT-COURSE)
+
+[高德开放平台](https://lbs.amap.com/)
