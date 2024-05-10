@@ -60,3 +60,4 @@
 [Motor Control with MBDT](https://www.nxp.com/design/training/bldc-motor-control-with-mbdt:TIP-BLDC-MBDT-COURSE)
 
 [高德开放平台](https://lbs.amap.com/)
+[Azure 虚拟桌面](https://learn.microsoft.com/zh-cn/training/modules/m365-wvd-intro/3-how-windows-virtual-desktop-works)
