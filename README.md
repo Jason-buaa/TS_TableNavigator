@@ -61,3 +61,6 @@
 
 [高德开放平台](https://lbs.amap.com/)
 [Azure 虚拟桌面](https://learn.microsoft.com/zh-cn/training/modules/m365-wvd-intro/3-how-windows-virtual-desktop-works)
+
+2024/5/15:
+[SharePoint](https://www.microsoft.com/zh-cn/microsoft-365/sharepoint/collaboration)
