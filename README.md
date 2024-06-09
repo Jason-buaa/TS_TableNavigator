@@ -67,3 +67,7 @@
 
 2024/5/30:
 [Design Best Practices for Office Add-ins](https://www.youtube.com/watch?v=vStXzijN-as&list=PLR9nK3mnD-OVExAWBr2QtS_5UmqUr7HL4&index=1)
+
+2024/6/10:
+
+[MySql 入门](https://youtu.be/5OdVJbNCSso?si=m77BAjKahN_DZXl-)
