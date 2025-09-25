@@ -71,3 +71,5 @@
 2024/6/10:
 
 [MySql 入门](https://youtu.be/5OdVJbNCSso?si=m77BAjKahN_DZXl-)
+
+Keep MS365 Alive.
